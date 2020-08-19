@@ -208,10 +208,18 @@ GLint ofxDXT::getGlTypeForCompression(ofxDXT::CompressionType t){
 	}
 }
 
+void ofxDXT::loadDataIntoTexture(const ofxDXT::Data& data, ofTexture& texture) {
+	string tmp = "";
+	loadDataIntoTexture(data, texture, tmp);
+}
 
-void ofxDXT::loadDataIntoTexture(const ofxDXT::Data & data, ofTexture & texture){
+void ofxDXT::loadDataIntoTexture(const ofxDXT::Data & data, ofTexture & texture, string& message){
 	GLint glCompressionType = ofxDXT::getGlTypeForCompression(data.getCompressionType());
 	GLint type = data.getCompressionType() == ofxDXT::DXT1 ? GL_RGB8 : GL_RGBA8;
+	if (data.getWidth() == 0 || data.getHeight() == 0) {
+		message = "DXT data has zero width or height: " + ofToString(data.getWidth()) + "x" +
+			ofToString(data.getHeight()) + ". As a result, the texture for this object may not be loaded correctly";
+	}
 	//allocate texture with DXT5 internals
 	bool allocated = texture.isAllocated();
 	bool sizeMismatch = true;

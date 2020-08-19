@@ -45,7 +45,8 @@ public:
 	static void saveToDisk(ofxDXT::Data & data, const string & path);
 	static bool loadFromDisk(const string & path, ofxDXT::Data & data);
 
-	static void loadDataIntoTexture(const ofxDXT::Data & data, ofTexture & texture);
+	static void loadDataIntoTexture(const ofxDXT::Data& data, ofTexture& texture);
+	static void loadDataIntoTexture(const ofxDXT::Data & data, ofTexture & texture, string& message);
 
 protected:
 
