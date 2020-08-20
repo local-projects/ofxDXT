@@ -230,7 +230,18 @@ void ofxDXT::loadDataIntoTexture(const ofxDXT::Data & data, ofTexture & texture,
 		typeMismatch = texData.glInternalFormat != glCompressionType;
 	}
 	if(!allocated || sizeMismatch || typeMismatch){
+		// Attempt to allocate a first time
 		texture.allocate(data.getWidth(), data.getHeight(), glCompressionType, false /*force GL_TEXTURE_2D*/, type, GL_UNSIGNED_BYTE);
 	}
+	// If still not allocated (as sometimes happens the first time an application tries to allocate compressed
+	// textures, then try a second time)
+	if (!texture.isAllocated()) {
+		texture.allocate(data.getWidth(), data.getHeight(), glCompressionType, false /*force GL_TEXTURE_2D*/, type, GL_UNSIGNED_BYTE);
+		if (!texture.isAllocated()) {
+			// Now throw an error if it wasn't allocated a second time
+			message += "\nTexture was not allocated properly after two attempts.";
+		}
+	}
+	// Should data be loaded if not allocated?
 	texture.loadData((unsigned char *)data.getData(), data.getWidth(), data.getHeight(), glCompressionType);
 }
